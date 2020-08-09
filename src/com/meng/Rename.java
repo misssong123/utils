@@ -1,9 +1,8 @@
 package com.meng;
 
 import java.io.File;
-//https://github.com/misssong123/utils.git
 /**
- * 将指定文件夹中文件进行重命名或者去点指定字符串
+ * 将指定文件夹中的文件去掉指定字符串
  */
 public class Rename {
     public static void main(String[] args) {
@@ -30,10 +29,31 @@ public class Rename {
         //如果为文件直接替换,如果为文件夹,将文件夹内符合条件的都经替换
         if (file.exists()){
             if (file.isFile()){
-
+                String resultName = "";
+                resultName = path.replace(file.getName(),"");
+                //将除文件名后缀的内容进行替换，在和文件名后缀进行拼接
+                resultName=resultName+file.getName().substring(0,file.getName().lastIndexOf(".")).replace(target,"")+file.getName().substring(file.getName().lastIndexOf("."));
+                File result = new File(resultName);
+                file.renameTo(result);
             }
             if (file.isDirectory()){
-
+                //记录替换的文件个数
+                int num = 0;
+                //记录总文件个数
+                int total =0;
+                File[] files = file.listFiles();
+                for (File demo : files){
+                    total ++;
+                    if (demo.getName().contains(target)){
+                        num ++;
+                        String name = demo.getName();
+                        String resultName = path+"\\"+name.substring(0,name.lastIndexOf(".")).replace(target,"")
+                                +name.substring(name.lastIndexOf("."));
+                        File result = new File(resultName);
+                        demo.renameTo(result);
+                    }
+                }
+                System.out.println("总共有"+total+"个文件,成功替换"+num+"个文件");
             }
         }else {
             System.out.println("文件不存在");
